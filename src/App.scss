@@ -1,0 +1,32 @@
+@import "~bootstrap/scss/bootstrap";
+
+.App {
+  height: 100vh;
+  background-color: #242424;
+  color: #fff;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.itemMap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1em;
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+      text-align: left;
+
+        li {
+          padding: 0.2em;
+        }
+    }
+
+}
