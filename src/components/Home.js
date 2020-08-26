@@ -78,7 +78,7 @@ const Home = (props) => {
                     <div className="btn-group mb-3">
                         <button className="btn btn-warning" onClick={handleClick}>People</button>
                         <button className="btn btn-success" onClick={handleClick}>Starships</button>
-                        <button className="btn btn-danger" onClick={handleClick}>Vehicles</button>
+                        <button className="btn btn-primary" onClick={handleClick}>Vehicles</button>
                         <button className="btn btn-light" onClick={handleClick}>Planets</button>
                         <button className="btn btn-dark" onClick={handleClick}>Species</button>
                     </div>
@@ -86,8 +86,8 @@ const Home = (props) => {
                 <div>
                     <h3>Showing {itemsPerPage} {type} at page {page}</h3>
                     <div className="d-flex justify-content-between">
-                        <button onClick={() => page > 1 ? (setPage(page - 1), setEndOfPage(false)) : ''} className="btn btn-info">Previous Page</button>
-                        <button onClick={() => !endOfPage ? setPage(page + 1) : ''} className="btn btn-info">Next Page</button>
+                        <button onClick={() => page > 1 ? (setPage(page - 1), setEndOfPage(false)) : ''} className={page === 1 ? 'btn btn-danger' : 'btn btn-info'}>Previous Page</button>
+                        <button onClick={() => !endOfPage ? setPage(page + 1) : ''} className={endOfPage ? 'btn btn-danger' : 'btn btn-info'}>Next Page</button>
                     </div>
                 </div>
                 <div className='itemMap'>
