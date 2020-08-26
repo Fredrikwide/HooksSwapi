@@ -82,7 +82,7 @@ const Home = (props) => {
                     <h3>Showing {itemsPerPage} {type} at page {page}</h3>
                     <div className="d-flex justify-content-between">
                         <button onClick={() => page > 1 ? setPage(page - 1) : ''} className="btn btn-info">Previous Page</button>
-                        <button onClick={() => setPage(page + 1)} className="btn btn-info">Next Page</button>
+                        <button onClick={() => setPage(page + 1)} className={endOfpage ? 'btn btn-danger' : 'btn btn-info'}>Next Page</button>
                     </div>
                 </div>
                 <div className='itemMap'>
