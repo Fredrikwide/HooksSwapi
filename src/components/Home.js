@@ -1,12 +1,28 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import Axios from 'axios'
 
+const paginateArray = (items, page, itemsPerPage) => {
+
+    console.log(`Paginating array for page ${page} with ${itemsPerPage} items per page`, items);
+
+    return items.slice(
+        page * itemsPerPage - itemsPerPage,
+        page * itemsPerPage
+    );
+}
+
+
+
+
 const Home = (props) => {
 
     const [type, setType] = useState('people')
     const [items, setItems] = useState([])
+    const [itemsPerPage, setItemsPerPage] = useState(10)
+    const [page, setPage] = useState(1); // 2
 
     const handleClick = (e) => {
+        setPage(1)
         switch (e.target.innerText) {
             case 'Vehicles': setType('vehicles')
                 break;
@@ -18,19 +34,35 @@ const Home = (props) => {
                 break;
         }
 
-        console.log(`you clicked me andmy state is ${type}`)
+        console.log(`you clicked me and my state is ${type}`)
     }
 
     useEffect(() => {
-        console.log(`Side-effect triggered due to change in either resource, page or counter state variable`);
+        console.log(`Side-effect triggered due to change in either page or type state variable`);
 
-        Axios.get(`https://swapi.dev/api/${type}/`)
-            .then(res => {
-                console.log("Request returned a result:", res.data);
-                setItems(res.data.results);
-                console.log(items)
-            });
-    }, [type]);
+        if (page === 1) {
+            Axios.get(`http://swapi.dev/api/${type}/`)
+                .then(res => {
+                    console.log("Request returned a result:", res.data);
+                    setItems(res.data.results);
+                    console.log(res.data.results)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        }
+        else {
+            Axios.get(`http://swapi.dev/api/${type}/?page=${page}`)
+                .then(res => {
+                    console.log("Request returned a result:", res.data);
+                    setItems(res.data.results);
+                    console.log(res.data.results)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        }
+    }, [page]);
 
     return (
         <>
@@ -47,9 +79,10 @@ const Home = (props) => {
                     </div>
                 </div>
                 <div>
-                    <div className='btn-group'>
-                        <button className="btn btn-secondary">previous</button>
-                        <button className="btn btn-primary">next</button>
+                    <h3>Showing {itemsPerPage} {type} at page {page}</h3>
+                    <div className="d-flex justify-content-between">
+                        <button onClick={() => page > 1 ? setPage(page - 1) : ''} className="btn btn-info">Previous Page</button>
+                        <button onClick={() => setPage(page + 1)} className="btn btn-info">Next Page</button>
                     </div>
                 </div>
                 <div className='itemMap'>
