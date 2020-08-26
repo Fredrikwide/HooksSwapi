@@ -11,18 +11,17 @@ const paginateArray = (items, page, itemsPerPage) => {
     );
 }
 
-
-
-
 const Home = (props) => {
 
     const [type, setType] = useState('people')
     const [items, setItems] = useState([])
+    const [endOfPage, setEndOfPage] = useState(false)
     const [itemsPerPage, setItemsPerPage] = useState(10)
     const [page, setPage] = useState(1); // 2
 
     const handleClick = (e) => {
         setPage(1)
+        setEndOfPage(false)
         switch (e.target.innerText) {
             case 'Vehicles': setType('vehicles')
                 break;
@@ -32,6 +31,7 @@ const Home = (props) => {
                 break;
             case 'Starships': setType('starships')
                 break;
+            case 'Species': setType('species')
         }
 
         console.log(`you clicked me and my state is ${type}`)
@@ -59,10 +59,14 @@ const Home = (props) => {
                     console.log(res.data.results)
                 })
                 .catch(err => {
-                    console.log(err)
+                    if (err.response.status === 404) {
+                        setEndOfPage(!endOfPage)
+                    }
+                    console.log(JSON.stringify(err.response.status))
                 })
         }
     }, [page]);
+
 
     return (
         <>
@@ -74,20 +78,25 @@ const Home = (props) => {
                     <div className="btn-group mb-3">
                         <button className="btn btn-warning" onClick={handleClick}>People</button>
                         <button className="btn btn-success" onClick={handleClick}>Starships</button>
-                        <button className="btn btn-danger" onClick={handleClick}>Vehicles</button>
+                        <button className="btn btn-primary" onClick={handleClick}>Vehicles</button>
                         <button className="btn btn-light" onClick={handleClick}>Planets</button>
+                        <button className="btn btn-dark" onClick={handleClick}>Species</button>
                     </div>
                 </div>
                 <div>
                     <h3>Showing {itemsPerPage} {type} at page {page}</h3>
                     <div className="d-flex justify-content-between">
-                        <button onClick={() => page > 1 ? setPage(page - 1) : ''} className="btn btn-info">Previous Page</button>
-                        <button onClick={() => setPage(page + 1)} className={endOfpage ? 'btn btn-danger' : 'btn btn-info'}>Next Page</button>
+                        <button onClick={() => page > 1 ? (setPage(page - 1), setEndOfPage(false)) : ''} className={page === 1 ? 'btn btn-danger' : 'btn btn-info'}>Previous Page</button>
+                        <button onClick={() => !endOfPage ? setPage(page + 1) : ''} className={endOfPage ? 'btn btn-danger' : 'btn btn-info'}>Next Page</button>
                     </div>
                 </div>
                 <div className='itemMap'>
                     <ul>
-                        {items.map((item, index) => (<li key={index}>{item.name}</li>))}
+                        {!endOfPage ?
+                            items.map((item, index) => (<li key={index}>{item.name}</li>))
+                            :
+                            <h1>{`end of ${type}`}</h1>
+                        }
                     </ul>
                 </div>
             </div>
